@@ -20,8 +20,8 @@ def process_image(x_train,x_test,y_train,y_test):
     y_test_encoded = to_categorical(y_test)
     
 
-    x_train_reshaped = np.reshape(x_train,(60000,784))
-    x_test_reshaped = np.reshape(x_test,(10000,784))
+    x_train_reshaped = np.reshape(x_train,(60000,28,28,1))
+    x_test_reshaped = np.reshape(x_test,(10000,28,28,1))
 
     x_train_scale = x_train_reshaped / 255
     x_test_scale =  x_test_reshaped / 255
@@ -31,4 +31,5 @@ def process_image(x_train,x_test,y_train,y_test):
 
 if __name__ == "__main__":  
     (x_train,y_train),(x_test,y_test) = get_mnist_data(show_image=True)
-    print((x_train[0]))
+    print(x_train.shape)
+    #print((x_train[0]))

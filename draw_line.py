@@ -32,10 +32,10 @@ def image_processing(image_path):
     new_img = new_img.resize((28,28))
     new_img.save(resize_path)
     new_img_array = np.array(new_img)
-    new_img_array = new_img_array / 255
-    new_img_array_reshaped = np.reshape(new_img_array,(1,784))
+    new_img_array_reshaped = np.reshape(new_img_array,(1,28,28,1))
+    new_img_array_scale = new_img_array_reshaped / 255
 
-    return new_img_array_reshaped
+    return new_img_array_scale
     
 
 
@@ -59,6 +59,7 @@ while running:
             running = False
         if event.type == pg.MOUSEBUTTONDOWN:
             if event.button == LEFT:
+                screen.fill(BLACK,(0,0,screen_width,70))
                 start_pos = event.pos
                 drawing = True
             elif event.button == RIGHT:
@@ -70,7 +71,7 @@ while running:
                 pg.image.save(screen,output_path)
                 new_img = image_processing(output_path)
                 prediction = np.argmax(model.predict(new_img))
-                screen.fill(BLACK,(0,0,screen_width,60))
+                screen.fill(BLACK,(0,0,screen_width,70))
                 msg = font.render(f"You write {prediction}",True,WHITE)
                 msg_rect= msg.get_rect(center = (screen_width / 2, 50))
                 screen.blit(msg,msg_rect)

@@ -10,7 +10,11 @@ checkpoint_path = "training_1/cp.pkt"
 
 def create_model():
     model = Sequential([
-        layers.Dense(128,activation="relu",input_shape=(784,)),
+        layers.InputLayer(input_shape = (28,28,1)),
+        layers.RandomRotation(0.2),
+        layers.Conv1D(64,3,activation="relu"),
+        layers.Flatten(),
+        layers.Dense(128,activation="relu"),
         layers.Dense(64,activation="relu"),
         layers.Dense(10,activation="softmax")
     ])
