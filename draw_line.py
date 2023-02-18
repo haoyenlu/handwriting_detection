@@ -1,20 +1,20 @@
 import pygame as pg
 import AI
-from AI import load_model
+from load_model import load_model
 from PIL import Image , ImageOps
-from tensorflow.image import per_image_standardization
 import numpy as np
+import pickle
 
 pg.init()
 
 WHITE = (255,255,255)
 BLACK = (0,0,0)
 
-screen_width = 500
-screen_height = 500
+screen_width = 400
+screen_height = 400
 
 screen = pg.display.set_mode((screen_width,screen_height))
-screen.fill(WHITE)
+screen.fill(BLACK)
 
 
 
@@ -28,17 +28,18 @@ def crope(screen):
 
 def image_processing(image_path):
     img = Image.open(image_path)
-    new_img = img.resize((28,28))
-    new_img = ImageOps.grayscale(new_img)
+    new_img = ImageOps.grayscale(img)
+    new_img = new_img.resize((28,28))
+    new_img.save(resize_path)
     new_img_array = np.array(new_img)
-    new_img_array_reshaped = np.reshape(new_img_array,(784))
-    new_img_norm = (new_img_array_reshaped - np.mean(new_img_array_reshaped)) / (np.std(new_img_array_reshaped))
-    new_img = np.reshape(new_img_norm,(1,784))
-    return new_img
+    new_img_array = new_img_array / 255
+    new_img_array_reshaped = np.reshape(new_img_array,(1,784))
+
+    return new_img_array_reshaped
     
 
 
-model = load_model.load_model()
+model = load_model()
 
 
 LEFT = 1
@@ -59,13 +60,12 @@ while running:
                 start_pos = event.pos
                 drawing = True
             elif event.button == RIGHT:
-                screen.fill(WHITE)
+                screen.fill(BLACK)
         if event.type == pg.MOUSEBUTTONUP:
             if event.button == LEFT:
                 start_pos = None
                 drawing = False
-                img = crope(screen)
-                pg.image.save(img,output_path)
+                pg.image.save(screen,output_path)
                 new_img = image_processing(output_path)
                 prediction = np.argmax(model.predict(new_img))
                 print(prediction)
@@ -73,7 +73,7 @@ while running:
             if drawing:
                 mouse_pos = pg.mouse.get_pos()
                 if start_pos != None:
-                    pg.draw.line(screen,BLACK,start_pos,mouse_pos,15)
+                    pg.draw.line(screen,WHITE,start_pos,mouse_pos,15)
                 start_pos = mouse_pos
 
     pg.display.update()
