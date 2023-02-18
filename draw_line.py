@@ -50,6 +50,8 @@ running = True
 start_pos = None
 drawing = False
 
+font = pg.font.Font(None,50)
+msg = None
 while running:
 
     for event in pg.event.get():
@@ -68,12 +70,15 @@ while running:
                 pg.image.save(screen,output_path)
                 new_img = image_processing(output_path)
                 prediction = np.argmax(model.predict(new_img))
-                print(prediction)
+                screen.fill(BLACK,(0,0,screen_width,60))
+                msg = font.render(f"You write {prediction}",True,WHITE)
+                msg_rect= msg.get_rect(center = (screen_width / 2, 50))
+                screen.blit(msg,msg_rect)
         if event.type == pg.MOUSEMOTION:
             if drawing:
                 mouse_pos = pg.mouse.get_pos()
                 if start_pos != None:
-                    pg.draw.line(screen,WHITE,start_pos,mouse_pos,15)
+                    pg.draw.line(screen,WHITE,start_pos,mouse_pos,20)
                 start_pos = mouse_pos
 
     pg.display.update()
