@@ -11,5 +11,7 @@ python -m venv ./venv
 ./venv/scripts/activate
 pip install -r requirements.txt
 python draw_line.py
-``
+```
+draw line using **left click** 
+clear screen using **right click**
 
